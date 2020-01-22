@@ -8,7 +8,8 @@ OBJ_DIR =	./obj/
 
 SRC_DIR =	./source/asm/
 
-C_FILE =	main.c
+C_FILE =	main.c \
+			ft_check_file.c
 
 C_FIND =		$(addprefix $(SRC_P_DIR), $(C_FILE))
 
