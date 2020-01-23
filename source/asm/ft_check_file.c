@@ -111,7 +111,7 @@ void			ft_check_name(int fd, char **name_comment)
 			tmp[0]++;
 			while (tmp[0] && *tmp[0] && (*tmp[0] == 32 || *tmp[0] == '\t'))
 				tmp[0]++;
-			if (tmp[0] && *tmp[0] && (*tmp[0] != COMMENT_CHAR || *tmp[0] != ALT_COMMENT_CHAR))
+			if (tmp[0] && *tmp[0] && *tmp[0] != COMMENT_CHAR && *tmp[0] != ALT_COMMENT_CHAR)
 				ft_close_error(6);
 			ft_save_str(name_comment + name_com, tmp[2], tmp[3] - tmp[2]);
 		}

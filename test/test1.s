@@ -1,15 +1,5 @@
 #dsds
 #vdvsv
- .comment"comment start
- vau
- #####skbbsl
- sdfsd
- "
-;sfdsf
+ .comment"a" #
 
- .name"start
- ds
- fdsf
- dfs
- sdds
- end"   #  ;;
+ .name"" ;
