@@ -40,9 +40,10 @@
 # define CHAMP_MAX_SIZE			(MEM_SIZE / 6)
 
 # define COMMENT_CHAR			'#'
-# define ALT_COMMENT_CHAR       ';'
+# define ALT_COMMENT_CHAR		';'
 # define LABEL_CHAR				':'
 # define DIRECT_CHAR			'%'
+# define REGISTOR_CHAR			'r'
 # define SEPARATOR_CHAR			','
 
 # define LABEL_CHARS			"abcdefghijklmnopqrstuvwxyz_0123456789"
@@ -68,12 +69,12 @@ typedef char					t_arg_type;
 # define COMMENT_LENGTH			(2048)
 # define COREWAR_EXEC_MAGIC		0xea83f3
 
-typedef struct					header_s
+typedef struct					s_header
 {
 	unsigned int				magic;
 	char						prog_name[PROG_NAME_LENGTH + 1];
 	unsigned int				prog_size;
 	char						comment[COMMENT_LENGTH + 1];
-}								header_t;
+}								t_header;
 
 #endif

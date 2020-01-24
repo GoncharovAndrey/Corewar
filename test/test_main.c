@@ -50,5 +50,6 @@ int					main(int ac, char **av)
 		write(1, " ", 1);
 		tmp++;
 	}
+	char	*str;
 	return (0);
 }

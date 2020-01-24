@@ -62,38 +62,41 @@ char			*ft_create_name(char *av)
 
 int				main(int ac, char **av)
 {
+	t_root		root;
 	char		*name;
 	int			fd[2];
 	char		*tmp[2];
-	t_op		*topa;
 
 	if (ac == 1)
 		ft_close_error(0);
 	fd[0] = open(av[1], O_RDONLY);
 	if (fd[0] == -1)
 		ft_close_error(1);
+	root.lbl_char = ft_strjoin(LABEL_CHARS, NULL);
 	name = ft_create_name(av[1]);
 	if ((fd[1] = open(name,O_WRONLY | O_CREAT | O_TRUNC, 0666)) == -1)
 		ft_close_error(2);
 	ft_check_name(fd[0], tmp);
-	write(fd[1], "{name}\n{", 8);
-	while (tmp[0] && *tmp[0])
-	{
-		write(fd[1], tmp[0], 1);
-		tmp[0]++;
-	}
-	write(fd[1], "}\n{comment}\n{", 13);
-	while (tmp[1] && *tmp[1])
-	{
-		write(fd[1], tmp[1], 1);
-		tmp[1]++;
-	}
-	write(fd[1], "}", 1);
+//	write(fd[1], "{name}\n{", 8);
+//	while (tmp[0] && *tmp[0])
+//	{
+//		write(fd[1], tmp[0], 1);
+//		tmp[0]++;
+//	}
+//	write(fd[1], "}\n{comment}\n{", 13);
+//	while (tmp[1] && *tmp[1])
+//	{
+//		write(fd[1], tmp[1], 1);
+//		tmp[1]++;
+//	}
+//	write(fd[1], "}", 1);
 
-	topa = ft_init_command();
+	root.commmand = ft_init_command();
+	ft_check_command(fd[0], &root);
+	printf("%lu\n", ((t_com*)(root.instruction->data))->a_size);
 	close(fd[0]);
 	close(fd[1]);
 	free(name);
-	free(topa);
+	free(root.commmand);
 	return (0);
 }

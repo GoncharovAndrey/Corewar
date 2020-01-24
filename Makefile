@@ -1,6 +1,6 @@
 NAME_ASM = asm
 LIBFT_A = ./lib/libft/libft.a
-FLAGS = -Wall -Wextra -Werror
+FLAGS =
 COMP = gcc -c -o
 ASM_H = -I ./includes/
 
@@ -10,7 +10,9 @@ SRC_DIR =	./source/asm/
 
 C_FILE =	main.c \
 			ft_check_file.c \
-			ft_init_command.c
+			ft_init_command.c \
+			ft_dlist.c \
+			ft_check_command.c
 
 C_FIND =		$(addprefix $(SRC_P_DIR), $(C_FILE))
 
