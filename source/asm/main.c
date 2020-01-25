@@ -93,7 +93,14 @@ int				main(int ac, char **av)
 
 	root.commmand = ft_init_command();
 	ft_check_command(fd[0], &root);
-	printf("%lu\n", ((t_com*)(root.instruction->data))->a_size);
+//	t_dlist *tmp_dl;
+
+//	tmp = root.instruction;
+//	while ();
+	printf("%zu all_byte\n", root.all_byte);
+//	printf("%lu\n", ((t_com*)(root.instruction->data))->a_size);
+//	printf("{%s} str\n", ((t_label*)(root.label->data))->str);
+//	printf("%p\n", name);
 	close(fd[0]);
 	close(fd[1]);
 	free(name);

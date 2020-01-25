@@ -12,7 +12,8 @@ C_FILE =	main.c \
 			ft_check_file.c \
 			ft_init_command.c \
 			ft_dlist.c \
-			ft_check_command.c
+			ft_check_command.c \
+			ft_check_label.c
 
 C_FIND =		$(addprefix $(SRC_P_DIR), $(C_FILE))
 

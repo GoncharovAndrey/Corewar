@@ -47,8 +47,10 @@ typedef struct			s_com
 {
 	unsigned char		n_com;
 	unsigned char		t_dec;
-	unsigned int		arg[4];
-	unsigned short		o_size;
+	unsigned long int	arg[3];
+	struct s_label		*ind[3];
+	unsigned char		byte[3];
+	unsigned char 		o_size;
 	unsigned long int	a_size;
 }						t_com;
 
@@ -57,7 +59,7 @@ typedef struct			s_label
 	char				*str;
 	unsigned long int	pos;
 	int					status;
-	t_dlist				*head;
+	t_dlist				*head;/*e,hfnm*/
 }						t_label;
 
 typedef struct			s_root
@@ -65,7 +67,9 @@ typedef struct			s_root
 	t_op				*commmand;
 	t_header			header;
 	t_dlist				*instruction;
+	t_dlist				*ins_end;
 //	t_dlist				*unknow_label;
+	size_t				all_byte;
 	t_dlist				*label;
 	char				*lbl_char;
 }						t_root;
@@ -78,5 +82,8 @@ t_dlist					*ft_cut_dlist(t_dlist *del, t_dlist **head);
 t_dlist					*ft_add_next(t_dlist *node, t_dlist *tmp);
 t_dlist					*ft_creat_node(size_t size);
 void					ft_check_command(int fd, t_root *root);
+int						ft_check_label(char **str, t_root *root);
+t_label					*ft_find_label(char *str, t_dlist *label);
 
 #endif
+

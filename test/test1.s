@@ -1,8 +1,6 @@
 #dsds
 #vdvsv
- .comment"a" #
+ .comment "comment" #
 
- .name"" ;
-
-       add r1,r2,r3
+ .name "name" ;
 
