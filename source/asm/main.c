@@ -77,25 +77,18 @@ int				main(int ac, char **av)
 	name = ft_create_name(av[1]);
 	if ((fd[1] = open(name,O_WRONLY | O_CREAT | O_TRUNC, 0666)) == -1)
 		ft_close_error(2);
+	ft_memset(tmp, 0, sizeof(char*) * 2);
 	ft_check_name(fd[0], tmp);
-//	write(fd[1], "{name}\n{", 8);
-//	while (tmp[0] && *tmp[0])
-//	{
-//		write(fd[1], tmp[0], 1);
-//		tmp[0]++;
-//	}
-//	write(fd[1], "}\n{comment}\n{", 13);
-//	while (tmp[1] && *tmp[1])
-//	{
-//		write(fd[1], tmp[1], 1);
-//		tmp[1]++;
-//	}
-//	write(fd[1], "}", 1);
-//	root.header = (t_header*)malloc(sizeof(t_header));
-//	ft_memset(root.header, 0, sizeof(t_header));
-	root.commmand = g_com;
+
+//	root.header = tmp_header;
+//	root.commmand = g_com;
 //	root.commmand = ft_init_command();
 	ft_check_command(fd[0], &root);
+	root.header = (t_header*)ft_memalloc(sizeof(t_header));
+	ft_strcpy(root.header->prog_name, tmp[0]);
+	ft_strcpy(root.header->comment, tmp[1]);
+	root.header->magic = COREWAR_EXEC_MAGIC;
+	root.header->prog_size = (unsigned int)root.all_byte;
 //	t_dlist *tmp_dl;
 
 //	tmp = root.instruction;
@@ -111,6 +104,7 @@ int				main(int ac, char **av)
 		printf("{%hhu %hhu} {%lu %lu %lu} {%p %p %p} {%hhu %hhu %hhu} {%hhu %lu}\n", tmp_com->n_com, tmp_com->t_dec, tmp_com->arg[0], tmp_com->arg[1], tmp_com->arg[2], tmp_com->ind[0], tmp_com->ind[1], tmp_com->ind[2], tmp_com->byte[0], tmp_com->byte[1], tmp_com->byte[2], tmp_com->o_size, tmp_com->a_size);
 		tmp_dl = tmp_dl->next;
 	}
+	ft_write_cor(&root, fd[1]);
 //	printf("%lu\n", ((t_com*)(root.instruction->data))->a_size);
 //	printf("{%s} str\n", ((t_label*)(root.label->data))->str);
 //	printf("%p\n", name);

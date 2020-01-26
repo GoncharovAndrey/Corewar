@@ -46,7 +46,7 @@ void		ft_check_registor(char **str, t_op *com, t_com *ins, int j)
 		ft_close_error(42);
 	ins->n_com = com->n_com;
 	ins->arg[j] = i;
-	ins->t_dec |= REG_CODE << (6 - j * 2);
+	ins->t_dec |= (REG_CODE << (6 - j * 2));
 	ins->byte[j] = REG_BYTE;
 	ins->o_size += REG_BYTE;
 }
@@ -131,7 +131,7 @@ void		ft_check_dir(char **str, t_op *com, t_com *ins, int j, t_root *root)
 	ins->n_com = com->n_com;
 	ins->arg[j] = (unsigned int)i;
 	ins->byte[j] = com->s_dir;
-	ins->t_dec |= DIR_CODE << (6 - j * 2);
+	ins->t_dec |= (DIR_CODE << (6 - j * 2));
 	ins->o_size += com->s_dir;
 }
 
@@ -182,7 +182,7 @@ void		ft_check_ind(char **str, t_op *com, t_com *ins, int j, t_root *root)
 	ins->n_com = com->n_com;
 	ins->arg[j] = (unsigned int)i;
 	ins->byte[j] = IND_SIZE;
-	ins->t_dec |= IND_CODE << (6 - j * 2);
+	ins->t_dec |= (IND_CODE << (6 - j * 2));
 	ins->o_size += IND_SIZE;
 }
 
@@ -192,40 +192,41 @@ void		ft_add_command(char *str, t_root *root, t_com *tmp_com)
 	int		j;
 
 	j = 0;
-	i = ft_check_name_command(str, root->commmand);
+	i = ft_check_name_command(str, g_com);
 	if (i < 0)
 		ft_close_error(47);
-	str = str + root->commmand[i].n_sym;
+	str = str + g_com[i].n_sym;
 	while (str && *str && (*str == 32 || *str == '\t'))
 		str++;
 	if (!str || !*str || *str == SEPARATOR_CHAR)
 		ft_close_error(35);
-	while (j < root->commmand[i].n_arg)
+	while (j < g_com[i].n_arg)
 	{
 //		printf("%s\n", str);
 		if (str && *str == SEPARATOR_CHAR)
 			str++;
 		while (str && *str && (*str == 32 || *str == '\t'))
 			str++;
-		if ((root->commmand[i].arg[j] & T_REG) && *str == REGISTOR_CHAR)
-			ft_check_registor(&str, root->commmand + i, tmp_com, j);
-		else if ((root->commmand[i].arg[j] & T_DIR) && *str == DIRECT_CHAR)
+		if ((g_com[i].arg[j] & T_REG) && *str == REGISTOR_CHAR)
+			ft_check_registor(&str, g_com + i, tmp_com, j);
+		else if ((g_com[i].arg[j] & T_DIR) && *str == DIRECT_CHAR)
 //			ft_close_error(55);
-			ft_check_dir(&str, root->commmand + i, tmp_com, j, root);
-		else if (root->commmand[i].arg[j] & T_IND)
+			ft_check_dir(&str, g_com + i, tmp_com, j, root);
+		else if (g_com[i].arg[j] & T_IND)
 //			ft_close_error(55);
-			ft_check_ind(&str, root->commmand + i, tmp_com, j, root);
+			ft_check_ind(&str, g_com + i, tmp_com, j, root);
 		else
 			ft_close_error(37);
 		j++;
 	}
 	tmp_com->o_size++;
-	if (root->commmand[i].t_dec)
+	if (g_com[i].t_dec)
 		tmp_com->o_size++;
 	else
 		tmp_com->t_dec = 0;
-	tmp_com->a_size += tmp_com->o_size;
-	root->all_byte = tmp_com->a_size;
+	tmp_com->a_size = root->all_byte;
+	root->all_byte += tmp_com->o_size;
+
 	printf("%lu all_byte\n", root->all_byte);
 	if (str && *str)
 		ft_close_error(39);
@@ -241,6 +242,7 @@ void		ft_check_command(int fd, t_root *root)
 	while (get_next_line(fd, tmp) > 0)
 	{
 		tmp[1] = tmp[0];
+		printf("%s\n", tmp[0]);
 		if ((tmp[3] = ft_strchr(tmp[0], COMMENT_CHAR)))
 			*tmp[3] = '\0';
 		if ((tmp[3] = ft_strchr(tmp[0], ALT_COMMENT_CHAR)))
@@ -265,4 +267,8 @@ void		ft_check_command(int fd, t_root *root)
 		((t_com*)(root->ins_end->data))->a_size = root->all_byte;
 		free(tmp[1]);
 	}
+	t_dlist *tmpp;
+	tmpp = root->ins_end;
+	root->ins_end->prev->next = NULL;
+	free(tmpp);
 }

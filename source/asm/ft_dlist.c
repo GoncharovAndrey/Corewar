@@ -44,7 +44,7 @@ t_dlist		*ft_cut_dlist(t_dlist *del, t_dlist **head)
 	if (del->next)
 		del->next->prev = del->prev;
 	if (del->prev)
-		del->prev->next = del->prev;
+		del->prev->next = del->next;
 	if (!del->next && !del->prev)
 		*head = NULL;
 	return (del);

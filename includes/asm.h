@@ -66,11 +66,9 @@ typedef struct			s_label
 
 typedef struct			s_root
 {
-	t_op				*commmand;
-	t_header			header;
+	t_header			*header;
 	t_dlist				*instruction;
 	t_dlist				*ins_end;
-//	t_dlist				*unknow_label;
 	unsigned long int	all_byte;
 	t_dlist				*label;
 	char				*lbl_char;
@@ -108,6 +106,7 @@ void					ft_check_command(int fd, t_root *root);
 int						ft_check_label(char **str, t_root *root);
 t_label					*ft_find_label(char *str, t_dlist *label);
 void					ft_no_such_label(t_root *root);
+void					ft_write_cor(t_root *root, int	fd);
 
 #endif
 
