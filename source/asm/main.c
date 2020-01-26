@@ -69,6 +69,7 @@ int				main(int ac, char **av)
 
 	if (ac == 1)
 		ft_close_error(0);
+	ft_memset(&root,0,sizeof(t_root));
 	fd[0] = open(av[1], O_RDONLY);
 	if (fd[0] == -1)
 		ft_close_error(1);
@@ -90,20 +91,32 @@ int				main(int ac, char **av)
 //		tmp[1]++;
 //	}
 //	write(fd[1], "}", 1);
-
-	root.commmand = ft_init_command();
+//	root.header = (t_header*)malloc(sizeof(t_header));
+//	ft_memset(root.header, 0, sizeof(t_header));
+	root.commmand = g_com;
+//	root.commmand = ft_init_command();
 	ft_check_command(fd[0], &root);
 //	t_dlist *tmp_dl;
 
 //	tmp = root.instruction;
 //	while ();
+	ft_no_such_label(&root);
 	printf("%zu all_byte\n", root.all_byte);
+	t_dlist	*tmp_dl;
+	t_com	*tmp_com;
+	tmp_dl = root.instruction;
+	while (tmp_dl)
+	{
+		tmp_com = tmp_dl->data;
+		printf("{%hhu %hhu} {%lu %lu %lu} {%p %p %p} {%hhu %hhu %hhu} {%hhu %lu}\n", tmp_com->n_com, tmp_com->t_dec, tmp_com->arg[0], tmp_com->arg[1], tmp_com->arg[2], tmp_com->ind[0], tmp_com->ind[1], tmp_com->ind[2], tmp_com->byte[0], tmp_com->byte[1], tmp_com->byte[2], tmp_com->o_size, tmp_com->a_size);
+		tmp_dl = tmp_dl->next;
+	}
 //	printf("%lu\n", ((t_com*)(root.instruction->data))->a_size);
 //	printf("{%s} str\n", ((t_label*)(root.label->data))->str);
 //	printf("%p\n", name);
 	close(fd[0]);
 	close(fd[1]);
 	free(name);
-	free(root.commmand);
+//	free(root.commmand);
 	return (0);
 }

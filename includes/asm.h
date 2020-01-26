@@ -19,6 +19,8 @@
 # include "../lib/libft/libft.h"
 # include "op.h"
 
+# define REG_BYTE		1
+
 //typedef struct		s_command
 //{
 //	unsigned char	com;
@@ -69,10 +71,31 @@ typedef struct			s_root
 	t_dlist				*instruction;
 	t_dlist				*ins_end;
 //	t_dlist				*unknow_label;
-	size_t				all_byte;
+	unsigned long int	all_byte;
 	t_dlist				*label;
 	char				*lbl_char;
 }						t_root;
+
+static t_op				g_com[17] =
+{
+			{1, "live", 4, 1, {T_DIR}, 0, 4},
+			{2, "ld", 2, 2, {T_DIR | T_IND, T_REG}, 1, 4},
+			{3, "st", 2, 2, {T_REG, T_IND | T_REG}, 1, 4},
+			{4, "add", 3, 3, {T_REG, T_REG, T_REG}, 1, 4},
+			{5, "sub", 3, 3, {T_REG, T_REG, T_REG}, 1, 4},
+			{6, "and", 3, 3, {T_REG | T_DIR | T_IND, T_REG | T_IND | T_DIR, T_REG}, 1, 4},
+			{7, "or", 2, 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 1, 4},
+			{8, "xor", 3, 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 1, 4},
+			{9, "zjmp", 4, 1, {T_DIR}, 0, 2},
+			{10, "ldi", 3,3,  {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 1, 2},
+			{11, "sti", 3, 3, {T_REG, T_REG | T_DIR | T_IND, T_DIR | T_REG}, 1, 2},
+			{12, "fork", 4, 1, {T_DIR}, 0, 2},
+			{13, "lld", 3, 2, {T_DIR | T_IND, T_REG}, 1, 4},
+			{14, "lldi", 4, 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 1, 2},
+			{15, "lfork", 5, 1, {T_DIR}, 0, 2},
+			{16, "aff", 3, 1, {T_REG}, 1, 2},
+			{0, 0, 0, 0, 0, 0,0}
+};
 
 void					ft_close_error();
 void					ft_check_name(int fd, char **name_comment);
@@ -84,6 +107,7 @@ t_dlist					*ft_creat_node(size_t size);
 void					ft_check_command(int fd, t_root *root);
 int						ft_check_label(char **str, t_root *root);
 t_label					*ft_find_label(char *str, t_dlist *label);
+void					ft_no_such_label(t_root *root);
 
 #endif
 

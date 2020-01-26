@@ -15,15 +15,17 @@
 int			ft_check_name_command(char *str, t_op *com)
 {
 	int		i;
+	int		res;
 
 	i = 0;
+	res = -1;
 	while (com[i].n_com)
 	{
 		if (ft_strncmp(str, com[i].name, com[i].n_sym) == 0)
-			return (i);
+			res = i;
 		i++;
 	}
-	return (-1);
+	return (res);
 }
 
 void		ft_check_registor(char **str, t_op *com, t_com *ins, int j)
@@ -41,12 +43,12 @@ void		ft_check_registor(char **str, t_op *com, t_com *ins, int j)
 	while (*str && **str && (**str == 32 || **str == '\t'))
 		(*str)++;
 	if (*str && **str && **str != SEPARATOR_CHAR)
-		ft_close_error(44);
+		ft_close_error(42);
 	ins->n_com = com->n_com;
 	ins->arg[j] = i;
-	ins->t_dec = REG_CODE << (6 - j * 2);
-	ins->byte[j] = REG_SIZE;
-	ins->o_size += REG_SIZE;
+	ins->t_dec |= REG_CODE << (6 - j * 2);
+	ins->byte[j] = REG_BYTE;
+	ins->o_size += REG_BYTE;
 }
 
 char		*ft_check_char_ind(char **str, char *check)
@@ -60,7 +62,7 @@ char		*ft_check_char_ind(char **str, char *check)
 		if (**str == 32 || **str == '\t')
 		{
 			if (!(res = ft_strsub(res, 0, *str - res)))
-				ft_close_error(44);
+				ft_close_error(43);
 			return (res);
 		}
 		tmp = check;
@@ -82,7 +84,7 @@ char		*ft_check_char_ind(char **str, char *check)
 void		ft_check_dir(char **str, t_op *com, t_com *ins, int j, t_root *root)
 {
 	(*str)++;
-	printf("%s  str\n", *str);
+//	printf("%s  str\n", *str);
 	unsigned long int	i;
 	t_label				*tmp_l;
 
@@ -92,15 +94,18 @@ void		ft_check_dir(char **str, t_op *com, t_com *ins, int j, t_root *root)
 		(*str)++;
 		char			*tmp2;
 
+//		printf("{%s}  str\n", *str);
 		tmp2 = ft_check_char_ind(str, root->lbl_char);
-		if (!(tmp_l = ft_find_label(tmp2, root->label)))
+		if ((tmp_l = ft_find_label(tmp2, root->label)) == NULL)
 		{
-			root->label = ft_add_prev(root->label, ft_creat_node(sizeof(t_label)));
+//			printf("{%s} str label!!!!!!!!!!!!!!!!\n", tmp2);
+			root->label = ft_add_next(root->label, ft_creat_node(sizeof(t_label)));
 			tmp_l = (t_label*)root->label->data;
 			tmp_l->status = 0;
 			tmp_l->pos = root->all_byte;
 			tmp_l->str = tmp2;
 			ins->ind[j] = tmp_l;
+//			printf("%s   add label 0\n", tmp_l->str);
 		}
 		else
 		{
@@ -122,11 +127,11 @@ void		ft_check_dir(char **str, t_op *com, t_com *ins, int j, t_root *root)
 	while (*str && **str && (**str == 32 || **str == '\t'))
 		(*str)++;
 	if (*str && **str && **str != SEPARATOR_CHAR)
-		ft_close_error(44);
+		ft_close_error(45);
 	ins->n_com = com->n_com;
 	ins->arg[j] = (unsigned int)i;
 	ins->byte[j] = com->s_dir;
-	ins->t_dec = DIR_CODE << (6 - j * 2);
+	ins->t_dec |= DIR_CODE << (6 - j * 2);
 	ins->o_size += com->s_dir;
 }
 
@@ -144,12 +149,14 @@ void		ft_check_ind(char **str, t_op *com, t_com *ins, int j, t_root *root)
 		tmp2 = ft_check_char_ind(str, root->lbl_char);
 		if (!(tmp_l = ft_find_label(tmp2, root->label)))
 		{
-			root->label = ft_add_prev(root->label, ft_creat_node(sizeof(t_label)));
+//			printf("%s str label\n", tmp2);
+			root->label = ft_add_next(root->label, ft_creat_node(sizeof(t_label)));
 			tmp_l = (t_label*)root->label->data;
 			tmp_l->status = 0;
-			tmp_l->pos = root->all_byte;
+//			tmp_l->pos = root->all_byte;
 			tmp_l->str = tmp2;
 			ins->ind[j] = tmp_l;
+//			printf("%s   add label 0\n", tmp_l->str);
 		}
 		else
 		{
@@ -171,11 +178,11 @@ void		ft_check_ind(char **str, t_op *com, t_com *ins, int j, t_root *root)
 	while (*str && **str && (**str == 32 || **str == '\t'))
 		(*str)++;
 	if (*str && **str && **str != SEPARATOR_CHAR)
-		ft_close_error(44);
+		ft_close_error(46);
 	ins->n_com = com->n_com;
 	ins->arg[j] = (unsigned int)i;
 	ins->byte[j] = IND_SIZE;
-	ins->t_dec = IND_CODE << (6 - j * 2);
+	ins->t_dec |= IND_CODE << (6 - j * 2);
 	ins->o_size += IND_SIZE;
 }
 
@@ -187,15 +194,15 @@ void		ft_add_command(char *str, t_root *root, t_com *tmp_com)
 	j = 0;
 	i = ft_check_name_command(str, root->commmand);
 	if (i < 0)
-		ft_close_error(44);
+		ft_close_error(47);
 	str = str + root->commmand[i].n_sym;
 	while (str && *str && (*str == 32 || *str == '\t'))
 		str++;
 	if (!str || !*str || *str == SEPARATOR_CHAR)
-		ft_close_error(33);
+		ft_close_error(35);
 	while (j < root->commmand[i].n_arg)
 	{
-		printf("%s\n", str);
+//		printf("%s\n", str);
 		if (str && *str == SEPARATOR_CHAR)
 			str++;
 		while (str && *str && (*str == 32 || *str == '\t'))
@@ -209,7 +216,7 @@ void		ft_add_command(char *str, t_root *root, t_com *tmp_com)
 //			ft_close_error(55);
 			ft_check_ind(&str, root->commmand + i, tmp_com, j, root);
 		else
-			ft_close_error(33);
+			ft_close_error(37);
 		j++;
 	}
 	tmp_com->o_size++;
@@ -217,10 +224,11 @@ void		ft_add_command(char *str, t_root *root, t_com *tmp_com)
 		tmp_com->o_size++;
 	else
 		tmp_com->t_dec = 0;
-	tmp_com->a_size = tmp_com->a_size + tmp_com->o_size;
-	root->all_byte += tmp_com->o_size;
+	tmp_com->a_size += tmp_com->o_size;
+	root->all_byte = tmp_com->a_size;
+	printf("%lu all_byte\n", root->all_byte);
 	if (str && *str)
-		ft_close_error(33);
+		ft_close_error(39);
 }
 
 void		ft_check_command(int fd, t_root *root)
@@ -254,6 +262,7 @@ void		ft_check_command(int fd, t_root *root)
 		}
 		ft_add_command(tmp[0], root, root->ins_end->data);
 		root->ins_end = ft_add_next(root->ins_end, ft_creat_node(sizeof(t_com)));
+		((t_com*)(root->ins_end->data))->a_size = root->all_byte;
 		free(tmp[1]);
 	}
 }

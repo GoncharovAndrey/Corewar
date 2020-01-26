@@ -30,6 +30,22 @@ void				ft_print_byte(char *buf)
 
 int					main(int ac, char **av)
 {
+	char			*tmp;
+	char			buf[1];
+	int 			fd;
+	int				i;
+
+	fd = open(av[1] , O_RDONLY);
+	while((i = get_next_line(fd, &tmp)) > 0)
+	{
+		printf("%d\n", i);
+		free(tmp);
+		lseek(fd, -1, SEEK_CUR);
+		read(fd, buf, 1);
+//		if (*buf != '\n')
+			printf("{%c}\n", *buf);
+	}
+
 //	unsigned char	*res;
 //	char			*str = "0abf11a0";
 //	char			*tmp;
@@ -57,11 +73,11 @@ int					main(int ac, char **av)
 //	int fd;
 //	fd = open(av[1], O_WRONLY);
 //	write(fd, res - byte, byte);
-	int		i;
-	unsigned int tmp;
+//	int		i;
+//	unsigned int tmp;
 
-	i = 19;
-	tmp = (unsigned int)i;
-	ft_print_byte((char*)&tmp);
+//	i = 19;
+//	tmp = (unsigned int)i;
+//	ft_print_byte((char*)&tmp);
 	return (0);
 }

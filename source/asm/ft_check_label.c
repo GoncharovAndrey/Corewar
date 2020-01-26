@@ -12,6 +12,22 @@
 
 #include "../../includes/asm.h"
 
+void			ft_no_such_label(t_root *root)
+{
+	t_dlist		*tmp;
+	t_label		*tmp_l;
+
+	tmp = root->label;
+	while (tmp)
+	{
+		tmp_l = tmp->data;
+//		printf("%lu  {%s}\n", tmp_l->pos, tmp_l->str);
+		if (tmp_l->status == 0)
+			ft_close_error(199);
+		tmp = tmp->prev;
+	}
+}
+
 char		*ft_check_char(char *str, char *check)
 {
 	char	*tmp;
@@ -34,7 +50,7 @@ char		*ft_check_char(char *str, char *check)
 		str++;
 	}
 	if (!(res = ft_strsub(res, 0, str - res)))
-		ft_close_error(44);
+		ft_close_error(41);
 	return (res);
 }
 
@@ -44,13 +60,19 @@ t_label		*ft_find_label(char *str, t_dlist *label)
 	t_label	*tmp_l;
 
 	tmp = label;
+//	printf("!!!!!!!!  %s  !!!!!!@\n", str);
 	while (tmp)
 	{
-		tmp_l = (t_label*)label->data;
+		tmp_l = (t_label*)tmp->data;
+//		printf("{%s} \n", tmp_l->str);
 		if (ft_strcmp(tmp_l->str, str) == 0)
+		{
+//			printf("FIND\n");
 			return (tmp_l);
-		tmp = tmp->next;
+		}
+		tmp = tmp->prev;
 	}
+//	printf("!!!!!!!!!\n");
 	return (NULL);
 }
 
@@ -67,34 +89,19 @@ int			ft_check_label(char **str, t_root *root)
 	*str = tmp + 1;
 	if (!(tmp_l = ft_find_label(tmp2, root->label)))
 	{
-		root->label = ft_add_prev(root->label, ft_creat_node(sizeof(t_label)));
+		root->label = ft_add_next(root->label, ft_creat_node(sizeof(t_label)));
 		tmp_l = (t_label*)root->label->data;
 		tmp_l->status = 1;
 		tmp_l->pos = root->all_byte;
 		tmp_l->str = tmp2;
+//		printf("%s   add label 1\n", tmp_l->str);
 		return (1);
 	}
 	else if (tmp_l->status == 0)
+	{
+		tmp_l->pos = root->all_byte;
 		tmp_l->status = 1;
+	}
 	free(tmp2);
 	return (1);
 }
-
-//void			ft_put_values(t_dlist *head, unsigned long int size)
-//{
-//	t_dlist		*tmp;
-//	t_com		*tmp_c;
-//
-//	tmp = head;
-//	while (tmp)
-//	{
-//		tmp_c = (t_com*)tmp->data;
-//		if (tmp_c->arg[3] & 1)
-//			tmp_c->arg[0] = size - tmp_c->a_size;
-//		if (tmp_c->arg[3] & 2)
-//			tmp_c->arg[1] = size - tmp_c->a_size;
-//		if (tmp_c->arg[3] & 4)
-//			tmp_c->arg[2] = size - tmp_c->a_size;
-//		tmp = tmp->next;
-//	}
-//}
