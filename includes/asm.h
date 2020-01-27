@@ -14,8 +14,8 @@
 # define ASM_H
 
 #include <stdio.h>
-
-#include <fcntl.h>
+# include <limits.h>
+# include <fcntl.h>
 # include "../lib/libft/libft.h"
 # include "op.h"
 
@@ -54,6 +54,7 @@ typedef struct			s_com
 	unsigned char		byte[3];
 	unsigned char 		o_size;
 	unsigned long int	a_size;
+	size_t				line;
 }						t_com;
 
 typedef struct			s_label
@@ -61,7 +62,8 @@ typedef struct			s_label
 	char				*str;
 	unsigned long int	pos;
 	int					status;
-	t_dlist				*head;/*e,hfnm*/
+	size_t				line;
+//	t_dlist				*head;
 }						t_label;
 
 typedef struct			s_root
@@ -72,6 +74,7 @@ typedef struct			s_root
 	unsigned long int	all_byte;
 	t_dlist				*label;
 	char				*lbl_char;
+	size_t				line;
 }						t_root;
 
 static t_op				g_com[17] =
@@ -92,7 +95,7 @@ static t_op				g_com[17] =
 			{14, "lldi", 4, 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 1, 2},
 			{15, "lfork", 5, 1, {T_DIR}, 0, 2},
 			{16, "aff", 3, 1, {T_REG}, 1, 2},
-			{0, 0, 0, 0, 0, 0,0}
+			{0, 0, 0, 0, {0}, 0,0}
 };
 
 void					ft_close_error();
@@ -107,6 +110,7 @@ int						ft_check_label(char **str, t_root *root);
 t_label					*ft_find_label(char *str, t_dlist *label);
 void					ft_no_such_label(t_root *root);
 void					ft_write_cor(t_root *root, int	fd);
+unsigned int			ft_atoi_umax(char **str);
 
 #endif
 

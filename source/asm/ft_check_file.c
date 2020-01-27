@@ -55,6 +55,7 @@ void			ft_check_continue(char **name_comment, int fd, char *tmp_in)
 			free(tmp_read);
 			tmp_read = *name_comment;
 			*name_comment = ft_strjoin(*name_comment, tmp_copy);
+			ft_strdel(&tmp_copy);
 			free(tmp_read);
 			break ;
 		}

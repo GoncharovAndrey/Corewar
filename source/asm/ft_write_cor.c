@@ -46,7 +46,7 @@ void		ft_write_token(t_com *token, int fd)
 	{
 		if (token->ind[i])
 		{
-			printf("%lu  %lu\n", token->ind[i]->pos, token->a_size);
+//			printf("%lu  %lu\n", token->ind[i]->pos, token->a_size);
 			token->arg[i] = token->ind[i]->pos - token->a_size;
 		}
 		i++;

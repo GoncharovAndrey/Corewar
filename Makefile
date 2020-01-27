@@ -1,6 +1,6 @@
 NAME_ASM = asm
 LIBFT_A = ./lib/libft/libft.a
-FLAGS =
+FLAGS = -g -Wall -Wextra -Werror
 COMP = gcc -c -o
 ASM_H = -I ./includes/
 
@@ -14,7 +14,8 @@ C_FILE =	main.c \
 			ft_dlist.c \
 			ft_check_command.c \
 			ft_check_label.c \
-			ft_write_cor.c
+			ft_write_cor.c \
+			ft_atoi_umax.c
 
 C_FIND =		$(addprefix $(SRC_P_DIR), $(C_FILE))
 

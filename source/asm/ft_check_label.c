@@ -34,9 +34,10 @@ char		*ft_check_char(char *str, char *check)
 	char	*res;
 
 	res = str;
+//	printf
 	while (str && *str != LABEL_CHAR)
 	{
-		if (*str == 32 || *str == '\t')
+		if (*str == 32 || *str == '\t' || *str == DIRECT_CHAR || *str == SEPARATOR_CHAR || *str == '-')
 			return (NULL);
 		tmp = check;
 		while (tmp && *tmp)
@@ -94,6 +95,7 @@ int			ft_check_label(char **str, t_root *root)
 		tmp_l->status = 1;
 		tmp_l->pos = root->all_byte;
 		tmp_l->str = tmp2;
+		tmp_l->line = root->line;
 //		printf("%s   add label 1\n", tmp_l->str);
 		return (1);
 	}

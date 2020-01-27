@@ -111,6 +111,7 @@ int				main(int ac, char **av)
 	close(fd[0]);
 	close(fd[1]);
 	free(name);
+	exit(EXIT_SUCCESS);
 //	free(root.commmand);
 	return (0);
 }

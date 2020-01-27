@@ -12,6 +12,35 @@
 
 #include "../../includes/asm.h"
 
+void			ft_check_last_symbol(t_root *root, int fd)
+{
+	t_dlist		*tmp_dl;
+	t_com		*tmp_com;
+	char		tmp[1];
+
+	tmp_dl = root->ins_end;
+	printf("%p\n", tmp_dl->prev);
+	if (tmp_dl->prev)
+	{
+		tmp_dl->prev->next = NULL;
+		root->ins_end = tmp_dl->prev;
+		printf("tut\n");
+		free(tmp_dl->data);
+		free(tmp_dl);
+	}
+	lseek(fd, -1, SEEK_CUR);
+	read(fd, tmp, 1);
+	if (*tmp != '\n')
+	{
+		tmp_com = root->ins_end->data;
+		if (tmp_com->line == root->line)
+			ft_close_error(187);
+		if (root->label)
+			if (((t_label*)(root->label->data))->line == root->line)
+				ft_close_error(188);
+	}
+}
+
 int			ft_check_name_command(char *str, t_op *com)
 {
 	int		i;
@@ -56,6 +85,7 @@ char		*ft_check_char_ind(char **str, char *check)
 	char	*tmp;
 	char	*res;
 
+	printf("%s  - check label\n", *str);
 	res = *str;
 	while (*str && **str && **str != SEPARATOR_CHAR)
 	{
@@ -94,7 +124,7 @@ void		ft_check_dir(char **str, t_op *com, t_com *ins, int j, t_root *root)
 		(*str)++;
 		char			*tmp2;
 
-//		printf("{%s}  str\n", *str);
+		printf("{%s}  str\n", *str);
 		tmp2 = ft_check_char_ind(str, root->lbl_char);
 		if ((tmp_l = ft_find_label(tmp2, root->label)) == NULL)
 		{
@@ -115,9 +145,9 @@ void		ft_check_dir(char **str, t_op *com, t_com *ins, int j, t_root *root)
 	}
 	else if (**str == '-' || (**str >= '0' && **str <= '9'))
 	{
-		i = ft_atoi(*str);
-		if (**str == '-')
-			(*str)++;
+		i = ft_atoi_umax(str);
+//		if (**str == '-')
+//			(*str)++;
 		while (*str && **str && **str >= '0' && **str <= '9')
 			(*str)++;
 //		printf("%s\n", *str);
@@ -166,9 +196,9 @@ void		ft_check_ind(char **str, t_op *com, t_com *ins, int j, t_root *root)
 	}
 	else if (**str == '-' || (**str >= '0' && **str <= '9'))
 	{
-		i = ft_atoi(*str);
-		if (**str == '-')
-			(*str)++;
+		i = ft_atoi_umax(str);
+//		if (**str == '-')
+//			(*str)++;
 		while (*str && **str && **str >= '0' && **str <= '9')
 			(*str)++;
 //		printf("%s\n", *str);
@@ -227,7 +257,9 @@ void		ft_add_command(char *str, t_root *root, t_com *tmp_com)
 	tmp_com->a_size = root->all_byte;
 	root->all_byte += tmp_com->o_size;
 
-	printf("%lu all_byte\n", root->all_byte);
+	tmp_com->line = root->line;
+//	printf("%zu tmp_com %zu line\n", tmp_com->line, root->line);
+//	printf("%lu all_byte\n", root->all_byte);
 	if (str && *str)
 		ft_close_error(39);
 }
@@ -235,14 +267,14 @@ void		ft_add_command(char *str, t_root *root, t_com *tmp_com)
 void		ft_check_command(int fd, t_root *root)
 {
 	char	*tmp[4];
-	t_dlist	*tmp_com;
 
+	root->line = 0;
 	root->instruction = ft_add_next(NULL, ft_creat_node(sizeof(t_com)));
 	root->ins_end = root->instruction;
 	while (get_next_line(fd, tmp) > 0)
 	{
+		root->line++;
 		tmp[1] = tmp[0];
-		printf("%s\n", tmp[0]);
 		if ((tmp[3] = ft_strchr(tmp[0], COMMENT_CHAR)))
 			*tmp[3] = '\0';
 		if ((tmp[3] = ft_strchr(tmp[0], ALT_COMMENT_CHAR)))
@@ -267,8 +299,5 @@ void		ft_check_command(int fd, t_root *root)
 		((t_com*)(root->ins_end->data))->a_size = root->all_byte;
 		free(tmp[1]);
 	}
-	t_dlist *tmpp;
-	tmpp = root->ins_end;
-	root->ins_end->prev->next = NULL;
-	free(tmpp);
+	ft_check_last_symbol(root, fd);
 }
