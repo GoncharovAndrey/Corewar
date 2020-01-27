@@ -62,19 +62,40 @@ void			ft_check_continue(char **name_comment, int fd, char *tmp_in)
 	}
 }
 
-void			ft_check_name(int fd, char **name_comment)
+void			ft_cpy_name(t_root *root, int name_com, char *start, char *end)
+{
+	if (name_com == 0)
+	{
+		if ((end - start) <= PROG_NAME_LENGTH)
+			ft_strcpy(root->header->prog_name, start);
+		else
+			ft_close_error(17);
+	}
+	else if (name_com == 1)
+	{
+		if ((end - start) <= COMMENT_LENGTH)
+			ft_strcpy(root->header->comment, start);
+		else
+			ft_close_error(17);
+	}
+}
+
+void			ft_check_name(int fd, t_root *root)
 {
 	char		*tmp[8];
 	int			name_com;
-	int			hooks[2];
+	char		**name_comment;
+//	int			hooks[2];
 
-	hooks[0] = 0;
-	hooks[1] = 0;
+//	hooks[0] = 0;
+//	hooks[1] = 0;
+	name_comment =  ft_memalloc(sizeof(char*) * 2);
 	ft_memset(tmp, 0, sizeof(char*) * 8);
 	while (get_next_line(fd, tmp) > 0)
 	{
 		name_com = 0;
 		tmp[1] = tmp[0];
+
 		while (tmp[0] && (*tmp[0] == 32 || *tmp[0] == '\t'))
 			tmp[0]++;
 		if (!tmp[0] || !*tmp[0] || *tmp[0] == COMMENT_CHAR || *tmp[0] == ALT_COMMENT_CHAR)
@@ -82,30 +103,35 @@ void			ft_check_name(int fd, char **name_comment)
 			free(tmp[1]);
 			continue;
 		}
+
+
 		if (!tmp[0] || !*tmp[0] || *tmp[0] != NAME_CMD_STRING[0] || *tmp[0] != COMMENT_CMD_STRING[0])
 			ft_close_error(3);
+
 		if ((ft_strstr(tmp[0], NAME_CMD_STRING)) != tmp[0])
 		{
 			name_com = 1;
 			if ((ft_strstr(tmp[0], COMMENT_CMD_STRING)) != tmp[0])
 				ft_close_error(4);
 		}
+
 		tmp[0] += 1;
-		while (tmp[0] && *tmp[0] && *tmp[0] != 32 && *tmp[0] != '\t' && *tmp[0] != '"')
+		while (tmp[0] && *tmp[0] && *tmp[0] != 32 && *tmp[0] != '\t' && *tmp[0] != COM_CHAR)
 			tmp[0]++;
 		while (tmp[0] && *tmp[0] && (*tmp[0] == 32 || *tmp[0] == '\t'))
 			tmp[0]++;
-		if (!tmp[0] || !*tmp[0] || *tmp[0] != '"')
+		if (!tmp[0] || !*tmp[0] || *tmp[0] != COM_CHAR)
 			ft_close_error(5);
-		hooks[0] = 1;
+
+
+//		hooks[0] = 1;
 		tmp[0]++;
 		tmp[2] = tmp[0];
-		while (tmp[0] && *tmp[0] && *tmp[0] != '"')
+		while (tmp[0] && *tmp[0] && *tmp[0] != COM_CHAR)
 			tmp[0]++;
+
 		if (!tmp[0] || !*tmp[0])
-		{
 			ft_check_continue(name_comment + name_com, fd, tmp[2]);
-		}
 		else
 		{
 			tmp[3] = tmp[0];
@@ -114,14 +140,20 @@ void			ft_check_name(int fd, char **name_comment)
 				tmp[0]++;
 			if (tmp[0] && *tmp[0] && *tmp[0] != COMMENT_CHAR && *tmp[0] != ALT_COMMENT_CHAR)
 				ft_close_error(6);
-			ft_save_str(name_comment + name_com, tmp[2], tmp[3] - tmp[2]);
+			ft_cpy_name(root, name_com, tmp[2], tmp[3]);
+//			name_comment[name_com] = ft_strsub(tmp[2], 0, tmp[3] - tmp[2]);
+//			ft_save_str(name_comment + name_com, tmp[2], tmp[3] - tmp[2]);
 		}
 		free(tmp[1]);
 		if (name_comment[0] && ft_strlen(name_comment[0]) > PROG_NAME_LENGTH)
 			ft_close_error(10);
-		if (name_comment[1] && ft_strlen(name_comment[1]) > PROG_NAME_LENGTH)
+		if (name_comment[1] && ft_strlen(name_comment[1]) > COMMENT_LENGTH)
 			ft_close_error(11);
 		if (name_comment[0] && name_comment[1])
 			break;
 	}
+	if (name_comment[0])
+		ft_strcpy(root->header->prog_name, name_comment[0]);
+	if (name_comment[1])
+		ft_strcpy(root->header->prog_name, name_comment[1]);
 }

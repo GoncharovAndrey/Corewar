@@ -20,6 +20,7 @@
 # include "op.h"
 
 # define REG_BYTE		1
+# define COM_CHAR	'"'
 
 //typedef struct		s_command
 //{
@@ -99,8 +100,7 @@ static t_op				g_com[17] =
 };
 
 void					ft_close_error();
-void					ft_check_name(int fd, char **name_comment);
-t_op					*ft_init_command(void);
+void					ft_check_name(int fd, t_root *root);
 t_dlist					*ft_add_prev(t_dlist *node, t_dlist *tmp);
 t_dlist					*ft_cut_dlist(t_dlist *del, t_dlist **head);
 t_dlist					*ft_add_next(t_dlist *node, t_dlist *tmp);
@@ -111,6 +111,11 @@ t_label					*ft_find_label(char *str, t_dlist *label);
 void					ft_no_such_label(t_root *root);
 void					ft_write_cor(t_root *root, int	fd);
 unsigned int			ft_atoi_umax(char **str);
+void					ft_add_command(char *str, t_root *root);
+void					ft_check_registor(char **str, t_root *root, t_op *com, int j);
+void					ft_check_ind(char **str, t_root *root, t_op *com, int j);
+void					ft_check_dir(char **str, t_root *root, t_op *com, int j);
+
 
 #endif
 

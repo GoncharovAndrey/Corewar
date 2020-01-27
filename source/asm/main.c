@@ -69,6 +69,7 @@ int				main(int ac, char **av)
 
 	if (ac == 1)
 		ft_close_error(0);
+	root.header = (t_header*)ft_memalloc(sizeof(t_header));
 	ft_memset(&root,0,sizeof(t_root));
 	fd[0] = open(av[1], O_RDONLY);
 	if (fd[0] == -1)
@@ -78,15 +79,16 @@ int				main(int ac, char **av)
 	if ((fd[1] = open(name,O_WRONLY | O_CREAT | O_TRUNC, 0666)) == -1)
 		ft_close_error(2);
 	ft_memset(tmp, 0, sizeof(char*) * 2);
-	ft_check_name(fd[0], tmp);
 
-//	root.header = tmp_header;
-//	root.commmand = g_com;
-//	root.commmand = ft_init_command();
+
+
+
+//	ft_check_name(fd[0], &root);
+
 	ft_check_command(fd[0], &root);
-	root.header = (t_header*)ft_memalloc(sizeof(t_header));
-	ft_strcpy(root.header->prog_name, tmp[0]);
-	ft_strcpy(root.header->comment, tmp[1]);
+
+//	ft_strcpy(root.header->prog_name, tmp[0]);
+//	ft_strcpy(root.header->comment, tmp[1]);
 	root.header->magic = COREWAR_EXEC_MAGIC;
 	root.header->prog_size = (unsigned int)root.all_byte;
 //	t_dlist *tmp_dl;
@@ -101,7 +103,7 @@ int				main(int ac, char **av)
 	while (tmp_dl)
 	{
 		tmp_com = tmp_dl->data;
-		printf("{%hhu %hhu} {%lu %lu %lu} {%p %p %p} {%hhu %hhu %hhu} {%hhu %lu}\n", tmp_com->n_com, tmp_com->t_dec, tmp_com->arg[0], tmp_com->arg[1], tmp_com->arg[2], tmp_com->ind[0], tmp_com->ind[1], tmp_com->ind[2], tmp_com->byte[0], tmp_com->byte[1], tmp_com->byte[2], tmp_com->o_size, tmp_com->a_size);
+//		printf("{%hhu %hhu} {%lu %lu %lu} {%p %p %p} {%hhu %hhu %hhu} {%hhu %lu}\n", tmp_com->n_com, tmp_com->t_dec, tmp_com->arg[0], tmp_com->arg[1], tmp_com->arg[2], tmp_com->ind[0], tmp_com->ind[1], tmp_com->ind[2], tmp_com->byte[0], tmp_com->byte[1], tmp_com->byte[2], tmp_com->o_size, tmp_com->a_size);
 		tmp_dl = tmp_dl->next;
 	}
 	ft_write_cor(&root, fd[1]);

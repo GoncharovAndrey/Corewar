@@ -10,10 +10,11 @@ SRC_DIR =	./source/asm/
 
 C_FILE =	main.c \
 			ft_check_file.c \
-			ft_init_command.c \
 			ft_dlist.c \
 			ft_check_command.c \
+			ft_add_command.c \
 			ft_check_label.c \
+			ft_check_rdi.c \
 			ft_write_cor.c \
 			ft_atoi_umax.c
 
