@@ -21,7 +21,6 @@ void			ft_no_such_label(t_root *root)
 	while (tmp)
 	{
 		tmp_l = tmp->data;
-//		printf("%lu  {%s}\n", tmp_l->pos, tmp_l->str);
 		if (tmp_l->status == 0)
 			ft_close_error(199);
 		tmp = tmp->prev;
@@ -34,7 +33,6 @@ char		*ft_check_char(char *str, char *check)
 	char	*res;
 
 	res = str;
-//	printf
 	while (str && *str != LABEL_CHAR)
 	{
 		if (*str == 32 || *str == '\t' || *str == DIRECT_CHAR || *str == SEPARATOR_CHAR || *str == '-')
@@ -61,19 +59,15 @@ t_label		*ft_find_label(char *str, t_dlist *label)
 	t_label	*tmp_l;
 
 	tmp = label;
-//	printf("!!!!!!!!  %s  !!!!!!@\n", str);
 	while (tmp)
 	{
 		tmp_l = (t_label*)tmp->data;
-//		printf("{%s} \n", tmp_l->str);
 		if (ft_strcmp(tmp_l->str, str) == 0)
 		{
-//			printf("FIND\n");
 			return (tmp_l);
 		}
 		tmp = tmp->prev;
 	}
-//	printf("!!!!!!!!!\n");
 	return (NULL);
 }
 
@@ -96,7 +90,6 @@ int			ft_check_label(char **str, t_root *root)
 		tmp_l->pos = root->all_byte;
 		tmp_l->str = tmp2;
 		tmp_l->line = root->line;
-//		printf("%s   add label 1\n", tmp_l->str);
 		return (1);
 	}
 	else if (tmp_l->status == 0)

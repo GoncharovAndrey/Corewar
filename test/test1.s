@@ -9,7 +9,7 @@ ject"
 
 
 
-.name "  #1111";
+....................name "name";
 
 entry:
 	fork	%:coregeni
