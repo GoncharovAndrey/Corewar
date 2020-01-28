@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "../../includes/asm.h"
+#include "../../includes/asm_g_com.h"
+
 
 void			ft_no_such_label(t_root *root)
 {
@@ -27,21 +29,22 @@ void			ft_no_such_label(t_root *root)
 	}
 }
 
-char		*ft_check_char(char *str, char *check)
+char			*ft_check_char(char *str, char *check)
 {
-	char	*tmp;
-	char	*res;
+	char		*tmp;
+	char		*res;
 
 	res = str;
 	while (str && *str != LABEL_CHAR)
 	{
-		if (*str == 32 || *str == '\t' || *str == DIRECT_CHAR || *str == SEPARATOR_CHAR || *str == '-')
+		if (*str == 32 || *str == '\t' || *str == DIRECT_CHAR ||
+			*str == SEPARATOR_CHAR || *str == '-')
 			return (NULL);
 		tmp = check;
 		while (tmp && *tmp)
 		{
 			if (*str == *tmp)
-				break;
+				break ;
 			tmp++;
 		}
 		if (!*tmp)
@@ -53,10 +56,10 @@ char		*ft_check_char(char *str, char *check)
 	return (res);
 }
 
-t_label		*ft_find_label(char *str, t_dlist *label)
+t_label			*ft_find_label(char *str, t_dlist *label)
 {
-	t_dlist	*tmp;
-	t_label	*tmp_l;
+	t_dlist		*tmp;
+	t_label		*tmp_l;
 
 	tmp = label;
 	while (tmp)
@@ -71,11 +74,11 @@ t_label		*ft_find_label(char *str, t_dlist *label)
 	return (NULL);
 }
 
-int			ft_check_label(char **str, t_root *root)
+int				ft_check_label(char **str, t_root *root)
 {
-	t_label	*tmp_l;
-	char	*tmp;
-	char	*tmp2;
+	t_label		*tmp_l;
+	char		*tmp;
+	char		*tmp2;
 
 	if (!(tmp = ft_strchr(*str, LABEL_CHAR)))
 		return (0);
@@ -90,13 +93,12 @@ int			ft_check_label(char **str, t_root *root)
 		tmp_l->pos = root->all_byte;
 		tmp_l->str = tmp2;
 		tmp_l->line = root->line;
-		return (1);
 	}
 	else if (tmp_l->status == 0)
 	{
 		tmp_l->pos = root->all_byte;
 		tmp_l->status = 1;
+		free(tmp2);
 	}
-	free(tmp2);
 	return (1);
 }

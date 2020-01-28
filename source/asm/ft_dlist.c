@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/asm.h"
+#include "../../includes/asm_g_com.h"
 
 t_dlist		*ft_creat_node(size_t size)
 {
@@ -36,29 +37,5 @@ t_dlist		*ft_add_next(t_dlist *node, t_dlist *tmp)
 		return (NULL);
 	node->next = tmp;
 	tmp->prev = node;
-	return (tmp);
-}
-
-t_dlist		*ft_cut_dlist(t_dlist *del, t_dlist **head)
-{
-	if (del->next)
-		del->next->prev = del->prev;
-	if (del->prev)
-		del->prev->next = del->next;
-	if (!del->next && !del->prev)
-		*head = NULL;
-	return (del);
-}
-
-t_dlist		*ft_add_prev(t_dlist *node, t_dlist *tmp)
-{
-	if (!node)
-		return (tmp);
-	if (!tmp)
-		return (node);
-	if (node->next)
-		return (NULL);
-	node->prev = tmp;
-	tmp->next = node;
 	return (tmp);
 }

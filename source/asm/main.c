@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/asm.h"
+#include "../../includes/asm_g_com.h"
 
 void			ft_close_error(int error)
 {
@@ -62,9 +63,15 @@ char			*ft_create_name(char *av)
 
 void			ft_init_root(t_root **root)
 {
-	(*root) = ft_memalloc(sizeof(t_root));
-	(*root)->header = ft_memalloc(sizeof(t_header));
-	(*root)->lbl_char = ft_strjoin(LABEL_CHARS, NULL);
+	if (!((*root) = ft_memalloc(sizeof(t_root))))
+		ft_close_error(79);
+	if (!((*root)->header = ft_memalloc(sizeof(t_header))))
+		ft_close_error(79);
+	if (!((*root)->lbl_char = ft_strjoin(LABEL_CHARS, NULL)))
+		ft_close_error(79);
+	(*root)->line = 0;
+	(*root)->header->magic = COREWAR_EXEC_MAGIC;
+
 }
 
 int				main(int ac, char **av)
@@ -72,61 +79,25 @@ int				main(int ac, char **av)
 	t_root		*root;
 	char		*name;
 	int			fd[2];
-	char		*tmp[2];
 
 	if (ac == 1)
 		ft_close_error(0);
 	ft_init_root(&root);
-//	root = ft_memalloc(sizeof(t_root));
-//	root->header = (t_header*)malloc(sizeof(t_header) * 1);
-//	printf("%zu\n", sizeof(root->header));
-//	*(root->header->prog_name) = 'O';
-//	printf("%s O\n", root->header->prog_name);
-//	ft_memset(&root,0,sizeof(t_root));
 	fd[0] = open(av[1], O_RDONLY);
 	if (fd[0] == -1)
 		ft_close_error(1);
-//	root->lbl_char = ft_strdup(LABEL_CHARS);
 	name = ft_create_name(av[1]);
+	ft_check_name(fd[0], root);
+	ft_check_command(fd[0], root);
+	ft_no_such_label(root);
 	if ((fd[1] = open(name,O_WRONLY | O_CREAT | O_TRUNC, 0666)) == -1)
 		ft_close_error(2);
-	ft_memset(tmp, 0, sizeof(char*) * 2);
-
-
-
-
-	ft_check_name(fd[0], root);
-
-	ft_check_command(fd[0], root);
-
-//	ft_strcpy(root.header->prog_name, tmp[0]);
-//	ft_strcpy(root.header->comment, tmp[1]);
-	root->header->magic = COREWAR_EXEC_MAGIC;
-	root->header->prog_size = (unsigned int)root->all_byte;
-//	t_dlist *tmp_dl;
-
-//	tmp = root.instruction;
-//	while ();
-	ft_no_such_label(root);
-	printf("%zu all_byte\n", root->all_byte);
-	t_dlist	*tmp_dl;
-	t_com	*tmp_com;
-	tmp_dl = root->instruction;
-//	printf("{%s}  \n\n{%s}\n", root->header->prog_name, root->header->comment);
-	while (tmp_dl)
-	{
-		tmp_com = tmp_dl->data;
-//		printf("{%hhu %hhu} {%lu %lu %lu} {%p %p %p} {%hhu %hhu %hhu} {%hhu %lu}\n", tmp_com->n_com, tmp_com->t_dec, tmp_com->arg[0], tmp_com->arg[1], tmp_com->arg[2], tmp_com->ind[0], tmp_com->ind[1], tmp_com->ind[2], tmp_com->byte[0], tmp_com->byte[1], tmp_com->byte[2], tmp_com->o_size, tmp_com->a_size);
-		tmp_dl = tmp_dl->next;
-	}
 	ft_write_cor(root, fd[1]);
-//	printf("%lu\n", ((t_com*)(root.instruction->data))->a_size);
-//	printf("{%s} str\n", ((t_label*)(root.label->data))->str);
-//	printf("%p\n", name);
+	ft_putstr("Writing output program to ");
+	ft_putendl(name);
 	close(fd[0]);
 	close(fd[1]);
 	free(name);
 	exit(EXIT_SUCCESS);
-//	free(root.commmand);
 	return (0);
 }

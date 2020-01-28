@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/asm.h"
+#include "../../includes/asm_g_com.h"
 
 static void		ft_check_last_symbol(t_root *root, int fd)
 {
@@ -39,7 +40,7 @@ static void		ft_check_last_symbol(t_root *root, int fd)
 	}
 }
 
-static int	ft_skip_charters(char **str, char **str_copy)
+static int		ft_skip_charters(char **str, char **str_copy)
 {
 	while (*str && **str && (**str == 32 || **str == '\t'))
 		(*str)++;
@@ -51,9 +52,9 @@ static int	ft_skip_charters(char **str, char **str_copy)
 	return (1);
 }
 
-static void	ft_change_comment_char(char *str)
+static void		ft_change_comment_char(char *str)
 {
-	char	*tmp;
+	char		*tmp;
 
 	if ((tmp = ft_strchr(str, COMMENT_CHAR)))
 		*tmp = '\0';
@@ -61,11 +62,10 @@ static void	ft_change_comment_char(char *str)
 		*tmp = '\0';
 }
 
-void		ft_check_command(int fd, t_root *root)
+void			ft_check_command(int fd, t_root *root)
 {
-	char	*tmp[2];
+	char		*tmp[2];
 
-	root->line = 0;
 	root->instruction = ft_add_next(NULL, ft_creat_node(sizeof(t_com)));
 	root->ins_end = root->instruction;
 	while (get_next_line(fd, tmp) > 0)
@@ -79,7 +79,8 @@ void		ft_check_command(int fd, t_root *root)
 		if (!(ft_skip_charters(tmp, tmp + 1)))
 			continue;
 		ft_add_command(tmp[0], root);
-		root->ins_end = ft_add_next(root->ins_end, ft_creat_node(sizeof(t_com)));
+		root->ins_end = ft_add_next(root->ins_end,
+				ft_creat_node(sizeof(t_com)));
 		((t_com*)(root->ins_end->data))->a_size = root->all_byte;
 		free(tmp[1]);
 	}

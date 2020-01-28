@@ -1,13 +1,7 @@
 #by zaz, it's not very good, but what did you expect, rainbowdash is way better
 #2013
 
-.comment"0123456789
-1
-2
-3
-4
-5
-fd"
+.comment"0123456789"
 
 .name "  #1111"   #
 #

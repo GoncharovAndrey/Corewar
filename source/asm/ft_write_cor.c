@@ -11,16 +11,15 @@
 /* ************************************************************************** */
 
 #include "../../includes/asm.h"
+#include "../../includes/asm_g_com.h"
 
-
-void		ft_write_number(void *num, int byte, int fd)
+void				ft_write_number(void *num, int byte, int fd)
 {
 	while (--byte >= 0)
 		write(fd, num + byte, 1);
 }
 
-
-void		ft_write_header(t_header *header, int fd)
+void				ft_write_header(t_header *header, int fd)
 {
 	unsigned int	i;
 
@@ -33,10 +32,9 @@ void		ft_write_header(t_header *header, int fd)
 	write(fd, &i, 4);
 }
 
-
-void		ft_write_token(t_com *token, int fd)
+void				ft_write_token(t_com *token, int fd)
 {
-	int		i;
+	int				i;
 
 	i = 0;
 	write(fd, &token->n_com, 1);
@@ -52,17 +50,17 @@ void		ft_write_token(t_com *token, int fd)
 	while (i < 3)
 	{
 		if (token->byte[i])
-			ft_write_number(&token->arg[i] , token->byte[i], fd);
+			ft_write_number(&token->arg[i], token->byte[i], fd);
 		i++;
 	}
 }
 
-
-void		ft_write_cor(t_root *root, int	fd)
+void				ft_write_cor(t_root *root, int fd)
 {
-	t_dlist	*tmp;
+	t_dlist			*tmp;
 
 	tmp = root->instruction;
+	root->header->prog_size = root->all_byte;
 	ft_write_header(root->header, fd);
 	while (tmp)
 	{

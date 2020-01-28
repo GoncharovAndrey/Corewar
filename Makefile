@@ -16,7 +16,8 @@ C_FILE =	main.c \
 			ft_check_label.c \
 			ft_check_rdi.c \
 			ft_write_cor.c \
-			ft_atoi_umax.c
+			ft_atoi_umax.c \
+			ft_check_continue.c
 
 C_FIND =		$(addprefix $(SRC_P_DIR), $(C_FILE))
 

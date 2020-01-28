@@ -12,21 +12,13 @@
 
 #ifndef ASM_H
 # define ASM_H
-
-#include <stdio.h>
+# include <stdio.h>
 # include <limits.h>
 # include <fcntl.h>
 # include "../lib/libft/libft.h"
 # include "op.h"
-
 # define REG_BYTE		1
-# define COM_CHAR	'"'
-
-//typedef struct		s_command
-//{
-//	unsigned char	com;
-//	unsigned char
-//};
+# define COM_CHAR		'"'
 
 typedef struct			s_dlist
 {
@@ -37,13 +29,13 @@ typedef struct			s_dlist
 
 typedef struct			s_op
 {
-	unsigned char		n_com; /* number of command */
-	char				*name; /*name command */
-	int					n_sym; /*number symbol in name command */
-	int					n_arg; /*number arguments */
-	int					arg[4]; /*type arguments */
-	int					t_dec; /*argument type declaration*/
-	int					s_dir; /*size dir*/
+	unsigned char		n_com;
+	char				*name;
+	int					n_sym;
+	int					n_arg;
+	int					arg[4];
+	int					t_dec;
+	int					s_dir;
 }						t_op;
 
 typedef struct			s_com
@@ -53,7 +45,7 @@ typedef struct			s_com
 	unsigned long int	arg[3];
 	struct s_label		*ind[3];
 	unsigned char		byte[3];
-	unsigned char 		o_size;
+	unsigned char		o_size;
 	unsigned long int	a_size;
 	size_t				line;
 }						t_com;
@@ -64,7 +56,6 @@ typedef struct			s_label
 	unsigned long int	pos;
 	int					status;
 	size_t				line;
-//	t_dlist				*head;
 }						t_label;
 
 typedef struct			s_root
@@ -78,31 +69,8 @@ typedef struct			s_root
 	size_t				line;
 }						t_root;
 
-static t_op				g_com[17] =
-{
-			{1, "live", 4, 1, {T_DIR}, 0, 4},
-			{2, "ld", 2, 2, {T_DIR | T_IND, T_REG}, 1, 4},
-			{3, "st", 2, 2, {T_REG, T_IND | T_REG}, 1, 4},
-			{4, "add", 3, 3, {T_REG, T_REG, T_REG}, 1, 4},
-			{5, "sub", 3, 3, {T_REG, T_REG, T_REG}, 1, 4},
-			{6, "and", 3, 3, {T_REG | T_DIR | T_IND, T_REG | T_IND | T_DIR, T_REG}, 1, 4},
-			{7, "or", 2, 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 1, 4},
-			{8, "xor", 3, 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 1, 4},
-			{9, "zjmp", 4, 1, {T_DIR}, 0, 2},
-			{10, "ldi", 3,3,  {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 1, 2},
-			{11, "sti", 3, 3, {T_REG, T_REG | T_DIR | T_IND, T_DIR | T_REG}, 1, 2},
-			{12, "fork", 4, 1, {T_DIR}, 0, 2},
-			{13, "lld", 3, 2, {T_DIR | T_IND, T_REG}, 1, 4},
-			{14, "lldi", 4, 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 1, 2},
-			{15, "lfork", 5, 1, {T_DIR}, 0, 2},
-			{16, "aff", 3, 1, {T_REG}, 1, 2},
-			{0, 0, 0, 0, {0}, 0,0}
-};
-
 void					ft_close_error();
 void					ft_check_name(int fd, t_root *root);
-t_dlist					*ft_add_prev(t_dlist *node, t_dlist *tmp);
-t_dlist					*ft_cut_dlist(t_dlist *del, t_dlist **head);
 t_dlist					*ft_add_next(t_dlist *node, t_dlist *tmp);
 t_dlist					*ft_creat_node(size_t size);
 void					ft_check_command(int fd, t_root *root);
@@ -112,10 +80,14 @@ void					ft_no_such_label(t_root *root);
 void					ft_write_cor(t_root *root, int	fd);
 unsigned int			ft_atoi_umax(char **str);
 void					ft_add_command(char *str, t_root *root);
-void					ft_check_registor(char **str, t_root *root, t_op *com, int j);
-void					ft_check_ind(char **str, t_root *root, t_op *com, int j);
-void					ft_check_dir(char **str, t_root *root, t_op *com, int j);
-
+void					ft_check_reg(char **str, t_root *root,
+						t_op *com, int j);
+void					ft_check_ind(char **str, t_root *root,
+						t_op *com, int j);
+void					ft_check_dir(char **str, t_root *root,
+						t_op *com, int j);
+char					*ft_check_continue(t_root *root, int fd,
+						char *tmp_in, int name_com);
+int						ft_check_com_char(char **str, char **del);
 
 #endif
-

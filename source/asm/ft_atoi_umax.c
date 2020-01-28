@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/asm.h"
+#include "../../includes/asm_g_com.h"
 
 static unsigned int		ft_res_sign(int z)
 {
@@ -19,7 +20,6 @@ static unsigned int		ft_res_sign(int z)
 	else
 		return (0);
 }
-
 
 unsigned int			ft_atoi_umax(char **str)
 {
@@ -39,12 +39,10 @@ unsigned int			ft_atoi_umax(char **str)
 		ft_close_error(97);
 	while (**str >= '0' && **str <= '9')
 	{
-//		printf("%lu tmp, %lu res\n", tmp, res);
 		if (tmp > res)
 			return (ft_res_sign(z));
 		tmp = res;
 		res = res * 10 + (**str - '0');
-
 		(*str)++;
 	}
 	return (res * z);

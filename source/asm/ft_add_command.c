@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/asm.h"
+#include "../../includes/asm_g_com.h"
 
 static int	ft_check_name_command(char *str, t_op *com)
 {
@@ -40,7 +41,7 @@ static void	ft_check_argument(char **str, t_op *com, t_root *root)
 		while (*str && **str && (**str == 32 || **str == '\t'))
 			(*str)++;
 		if ((com->arg[j] & T_REG) && **str == REGISTOR_CHAR)
-			ft_check_registor(str, root, com, j);
+			ft_check_reg(str, root, com, j);
 		else if ((com->arg[j] & T_DIR) && **str == DIRECT_CHAR)
 			ft_check_dir(str, root, com, j);
 		else if (com->arg[j] & T_IND)
@@ -81,34 +82,7 @@ void		ft_add_command(char *str, t_root *root)
 	if (!str || !*str || *str == SEPARATOR_CHAR)
 		ft_close_error(35);
 	ft_check_argument(&str, g_com + i, root);
-
-//	while (j < g_com[i].n_arg)
-//	{
-//		if (str && *str == SEPARATOR_CHAR)
-//			str++;
-//		while (str && *str && (*str == 32 || *str == '\t'))
-//			str++;
-//		if ((g_com[i].arg[j] & T_REG) && *str == REGISTOR_CHAR)
-//			ft_check_registor(&str, g_com + i, tmp_com, j);
-//		else if ((g_com[i].arg[j] & T_DIR) && *str == DIRECT_CHAR)
-//			ft_check_dir(&str, g_com + i, tmp_com, j, root);
-//		else if (g_com[i].arg[j] & T_IND)
-//			ft_check_ind(&str, g_com + i, tmp_com, j, root);
-//		else
-//			ft_close_error(37);
-//		j++;
-//	}
 	ft_size_byte_ins(root, g_com + i);
-
-//	tmp_com->o_size++;
-//	if (g_com[i].t_dec)
-//		tmp_com->o_size++;
-//	else
-//		tmp_com->t_dec = 0;
-//	tmp_com->a_size = root->all_byte;
-//	root->all_byte += tmp_com->o_size;
-//	tmp_com->line = root->line;
-
 	if (str && *str)
 		ft_close_error(39);
 }

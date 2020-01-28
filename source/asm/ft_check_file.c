@@ -11,94 +11,19 @@
 /* ************************************************************************** */
 
 #include "../../includes/asm.h"
+#include "../../includes/asm_g_com.h"
 
-size_t			ft_cat_name_n(t_root *root, int name_com, char *start, char *end)
+
+static void		ft_available_name_com(t_root *root, char **tmp, int name_com)
 {
-	size_t		len;
-
-	len = 0;
-	if (name_com == 4)
-	{
-		len = ft_strlen(root->header->prog_name);
-		len = len + (end - start);
-		if (len + 1 <= PROG_NAME_LENGTH)
-			ft_strncat(root->header->prog_name, start, end - start);
-		else
-			ft_close_error(17);
-	}
-	else if (name_com == 5)
-	{
-		len = ft_strlen(root->header->comment);
-		len = len + (end - start);
-		if (len + 1 <= COMMENT_LENGTH)
-			ft_strncat(root->header->comment, start, end  - start);
-		else
-			ft_close_error(17);
-	}
-	return (len);
+	if (tmp)
+		if (*(tmp + name_com))
+			ft_close_error(784);
+	root->line++;
+	root->line--;
 }
 
-void			ft_available_name_com(t_root *root, int name_com)
-{
-	if (name_com == 4)
-	{
-		if (root->header->prog_name[0])
-			ft_close_error(564);
-	}
-	else if (name_com == 5)
-	{
-		if (root->header->comment[0])
-			ft_close_error(564);
-	}
-}
-
-
-char			*ft_check_continue(t_root *root, int fd, char *tmp_in, int name_com)
-{
-	size_t		size;
-	char		*tmp_read;
-	char		*tmp_end;
-
-	ft_available_name_com(root, name_com);
-	size = ft_strlen(tmp_in);
-	size = ft_cat_name_n(root, name_com, tmp_in, tmp_in + size);
-	if (name_com == 4)
-		root->header->prog_name[size] = '\n';
-	else if (name_com == 5)
-		root->header->comment[size] = '\n';
-	while (get_next_line(fd, &tmp_read) > 0)
-	{
-		root->line++;
-		tmp_end = ft_strchr(tmp_read, COM_CHAR);
-		if (!tmp_end)
-		{
-			size = ft_strlen(tmp_read);
-			size = ft_cat_name_n(root, name_com, tmp_read, tmp_read + size);
-			if (name_com == 4)
-				root->header->prog_name[size] = '\n';
-			else if (name_com == 5)
-				root->header->comment[size] = '\n';
-			free(tmp_read);
-			continue;
-		}
-		else
-		{
-			size = ft_cat_name_n(root, name_com, tmp_read, tmp_end);
-			tmp_end++;
-			if (ft_check_com_char(tmp_end, tmp_read) == 1)
-				ft_close_error(455);
-			free(tmp_read);
-			break ;
-		}
-	}
-	if (name_com == 4)
-		return (root->header->prog_name);
-	else if (name_com == 5)
-		return (root->header->comment);
-	return (NULL);
-}
-
-char			*ft_cpy_name(t_root *root, int name_com, char *start, char *end)
+static char		*ft_cpy_name(t_root *root, int name_com, char *start, char *end)
 {
 	if (name_com == 4)
 	{
@@ -110,21 +35,21 @@ char			*ft_cpy_name(t_root *root, int name_com, char *start, char *end)
 	else if (name_com == 5)
 	{
 		if ((end - start) <= COMMENT_LENGTH)
-			return (ft_strncpy(root->header->comment, start, end  - start));
+			return (ft_strncpy(root->header->comment, start, end - start));
 		else
 			ft_close_error(17);
 	}
 	return (NULL);
 }
 
-int				ft_valid_name(char **str)
+static int		ft_valid_name(char **str)
 {
 	char		*tmp;
 	int			res;
 
 	res = -1;
 	tmp = *str;
-	if (!*str || !**str || **str != NAME_CMD_STRING[0] || **str != COMMENT_CMD_STRING[0])
+	if (**str != NAME_CMD_STRING[0] || **str != COMMENT_CMD_STRING[0])
 		ft_close_error(39);
 	while (*str && **str && **str != 32 && **str != '\t' && **str != COM_CHAR)
 		(*str)++;
@@ -163,26 +88,26 @@ void			ft_check_name(int fd, t_root *root)
 	char		*tmp[6];
 	int			name_com;
 
-	ft_bzero(tmp,sizeof(char*) * 6);
+	ft_bzero(tmp, sizeof(char*) * 6);
 	while (get_next_line(fd, tmp) > 0)
 	{
 		root->line++;
 		tmp[1] = tmp[0];
 		if (!ft_check_com_char(tmp, tmp + 1))
-			continue;
+			continue ;
 		if ((name_com = ft_valid_name(tmp)) == -1)
 			ft_close_error(878);
+		ft_available_name_com(root, tmp, name_com);
 		if ((tmp[2] = ft_strchr(tmp[0], COM_CHAR)) == NULL)
 			tmp[name_com] = ft_check_continue(root, fd, tmp[0], name_com);
 		else
 		{
-			ft_available_name_com(root, name_com);
-			tmp[name_com] = ft_cpy_name(root, name_com, tmp[0], ++tmp[2]);
+			tmp[name_com] = ft_cpy_name(root, name_com, tmp[0], tmp[2]++);
 			if (ft_check_com_char(tmp + 2, tmp + 1) == 1)
 				ft_close_error(455);
 		}
 		ft_strdel(tmp + 1);
 		if (tmp[4] && tmp[5])
-			break;
+			break ;
 	}
 }

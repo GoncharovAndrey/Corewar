@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/asm.h"
+#include "../../includes/asm_g_com.h"
 
 char					*ft_check_char_ind(char **str, char *check)
 {
@@ -29,7 +30,7 @@ char					*ft_check_char_ind(char **str, char *check)
 		while (tmp && *tmp)
 		{
 			if (**str == *tmp)
-				break;
+				break ;
 			tmp++;
 		}
 		if (!*tmp)
@@ -116,7 +117,7 @@ void					ft_check_ind(char **str, t_root *root, t_op *com, int j)
 	ins->o_size += IND_SIZE;
 }
 
-void					ft_check_registor(char **str, t_root *root, t_op *com, int j)
+void					ft_check_reg(char **str, t_root *root, t_op *com, int j)
 {
 	int					i;
 	t_com				*ins;

@@ -1,15 +1,10 @@
 #by zaz, it's not very good, but what did you expect, rainbowdash is way better
 #2013
 
-.comment"oh, my,
-what a scary
-pro
-ject"
+.comment"0123456789"
 
-
-
-
-.name "  #1111";
+.name "  #1111"   #
+#
 
 entry:
 	fork	%:coregeni
