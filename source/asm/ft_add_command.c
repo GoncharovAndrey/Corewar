@@ -12,6 +12,7 @@
 
 #include "../../includes/asm.h"
 #include "../../includes/asm_g_com.h"
+#include "../../includes/asm_error.h"
 
 static int	ft_check_name_command(char *str, t_op *com)
 {
@@ -47,7 +48,7 @@ static void	ft_check_argument(char **str, t_op *com, t_root *root)
 		else if (com->arg[j] & T_IND)
 			ft_check_ind(str, root, com, j);
 		else
-			ft_close_error(37);
+			ft_close_error(INVALID_PARAM, root);
 		j++;
 	}
 }
@@ -75,14 +76,14 @@ void		ft_add_command(char *str, t_root *root)
 	j = 0;
 	i = ft_check_name_command(str, g_com);
 	if (i < 0)
-		ft_close_error(47);
+		ft_close_error(LEXICAL_ERROR, root);
 	str = str + g_com[i].n_sym;
 	while (str && *str && (*str == 32 || *str == '\t'))
 		str++;
 	if (!str || !*str || *str == SEPARATOR_CHAR)
-		ft_close_error(35);
+		ft_close_error(SYNTAX_ERROR, root);
 	ft_check_argument(&str, g_com + i, root);
 	ft_size_byte_ins(root, g_com + i);
 	if (str && *str)
-		ft_close_error(39);
+		ft_close_error(INVALID_PARAM, root);
 }

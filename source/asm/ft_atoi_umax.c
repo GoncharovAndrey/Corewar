@@ -12,6 +12,7 @@
 
 #include "../../includes/asm.h"
 #include "../../includes/asm_g_com.h"
+#include "../../includes/asm_error.h"
 
 static unsigned int		ft_res_sign(int z)
 {
@@ -21,7 +22,7 @@ static unsigned int		ft_res_sign(int z)
 		return (0);
 }
 
-unsigned int			ft_atoi_umax(char **str)
+unsigned int			ft_atoi_umax(char **str, t_root *root)
 {
 	unsigned long int	res;
 	unsigned long int	tmp;
@@ -36,7 +37,7 @@ unsigned int			ft_atoi_umax(char **str)
 		z = -1;
 	}
 	else if (**str > '9' || **str < '0')
-		ft_close_error(97);
+		ft_close_error(LABEL_ERROR, root);
 	while (**str >= '0' && **str <= '9')
 	{
 		if (tmp > res)

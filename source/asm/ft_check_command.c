@@ -12,6 +12,7 @@
 
 #include "../../includes/asm.h"
 #include "../../includes/asm_g_com.h"
+#include "../../includes/asm_error.h"
 
 static void		ft_check_last_symbol(t_root *root, int fd)
 {
@@ -33,10 +34,10 @@ static void		ft_check_last_symbol(t_root *root, int fd)
 	{
 		tmp_com = root->ins_end->data;
 		if (tmp_com->line == root->line)
-			ft_close_error(187);
+			ft_close_error(SYNTAX_ERROR, root);
 		if (root->label)
 			if (((t_label*)(root->label->data))->line == root->line)
-				ft_close_error(188);
+				ft_close_error(SYNTAX_ERROR, root);
 	}
 }
 

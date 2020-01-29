@@ -12,6 +12,7 @@
 
 #include "../../includes/asm.h"
 #include "../../includes/asm_g_com.h"
+#include "../../includes/asm_error.h"
 
 void			ft_no_such_label(t_root *root)
 {
@@ -23,12 +24,12 @@ void			ft_no_such_label(t_root *root)
 	{
 		tmp_l = tmp->data;
 		if (tmp_l->status == 0)
-			ft_close_error(199);
+			ft_close_error(LABEL_ERROR, NULL);
 		tmp = tmp->prev;
 	}
 }
 
-char			*ft_check_char(char *str, char *check)
+char			*ft_check_char(char *str, char *check, t_root *root)
 {
 	char		*tmp;
 	char		*res;
@@ -47,11 +48,11 @@ char			*ft_check_char(char *str, char *check)
 			tmp++;
 		}
 		if (!*tmp)
-			ft_close_error(75);
+			ft_close_error(SYNTAX_ERROR, root);
 		str++;
 	}
 	if (!(res = ft_strsub(res, 0, str - res)))
-		ft_close_error(41);
+		ft_close_error(SYNTAX_ERROR, root);
 	return (res);
 }
 
@@ -73,6 +74,15 @@ t_label			*ft_find_label(char *str, t_dlist *label)
 	return (NULL);
 }
 
+static void		ft_fu_lab(t_root *root, t_label *tmp_l)
+{
+	if (tmp_l->status == 0)
+	{
+		tmp_l->pos = root->all_byte;
+		tmp_l->status = 1;
+	}
+}
+
 int				ft_check_label(char **str, t_root *root)
 {
 	t_label		*tmp_l;
@@ -81,7 +91,7 @@ int				ft_check_label(char **str, t_root *root)
 
 	if (!(tmp = ft_strchr(*str, LABEL_CHAR)))
 		return (0);
-	if (!(tmp2 = ft_check_char(*str, root->lbl_char)))
+	if (!(tmp2 = ft_check_char(*str, root->lbl_char, root)))
 		return (0);
 	*str = tmp + 1;
 	if (!(tmp_l = ft_find_label(tmp2, root->label)))
@@ -93,10 +103,9 @@ int				ft_check_label(char **str, t_root *root)
 		tmp_l->str = tmp2;
 		tmp_l->line = root->line;
 	}
-	else if (tmp_l->status == 0)
+	else
 	{
-		tmp_l->pos = root->all_byte;
-		tmp_l->status = 1;
+		ft_fu_lab(root, tmp_l);
 		free(tmp2);
 	}
 	return (1);

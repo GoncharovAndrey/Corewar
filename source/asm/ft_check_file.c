@@ -12,12 +12,13 @@
 
 #include "../../includes/asm.h"
 #include "../../includes/asm_g_com.h"
+#include "../../includes/asm_error.h"
 
 static void		ft_available_name_com(t_root *root, char **tmp, int name_com)
 {
 	if (tmp)
 		if (*(tmp + name_com))
-			ft_close_error(784);
+			ft_close_error(DUPLICATE_ERR, root);
 	root->line++;
 	root->line--;
 }
@@ -29,19 +30,19 @@ static char		*ft_cpy_name(t_root *root, int name_com, char *start, char *end)
 		if ((end - start) <= PROG_NAME_LENGTH)
 			return (ft_strncpy(root->header->prog_name, start, end - start));
 		else
-			ft_close_error(17);
+			ft_close_error(NAME_SIZE, NULL);
 	}
 	else if (name_com == 5)
 	{
 		if ((end - start) <= COMMENT_LENGTH)
 			return (ft_strncpy(root->header->comment, start, end - start));
 		else
-			ft_close_error(17);
+			ft_close_error(NAME_SIZE, NULL);
 	}
 	return (NULL);
 }
 
-static int		ft_valid_name(char **str)
+static int		ft_valid_name(char **str, t_root *root)
 {
 	char		*tmp;
 	int			res;
@@ -49,13 +50,13 @@ static int		ft_valid_name(char **str)
 	res = -1;
 	tmp = *str;
 	if (**str != NAME_CMD_STRING[0] || **str != COMMENT_CMD_STRING[0])
-		ft_close_error(39);
+		ft_close_error(SYNTAX_ERROR, root);
 	while (*str && **str && **str != 32 && **str != '\t' && **str != COM_CHAR)
 		(*str)++;
 	if (!*str || !**str)
-		ft_close_error(144);
+		ft_close_error(SYNTAX_ERROR, root);
 	if (**str != 32 && **str != '\t' && **str != COM_CHAR)
-		ft_close_error(155);
+		ft_close_error(SYNTAX_ERROR, root);
 	tmp = ft_strsub(tmp, 0, *str - tmp);
 	if (!ft_strcmp(tmp, NAME_CMD_STRING))
 		res = 4;
@@ -64,7 +65,7 @@ static int		ft_valid_name(char **str)
 	while (*str && **str && (**str == 32 || **str == '\t'))
 		(*str)++;
 	if (!*str || !**str || **str != COM_CHAR)
-		ft_close_error(166);
+		ft_close_error(SYNTAX_ERROR, root);
 	(*str)++;
 	free(tmp);
 	return (res);
@@ -87,8 +88,8 @@ void			ft_check_name(int fd, t_root *root)
 	{
 		if (!ft_fu_norm(root, tmp, tmp + 1))
 			continue ;
-		if ((name_com = ft_valid_name(tmp)) == -1)
-			ft_close_error(878);
+		if ((name_com = ft_valid_name(tmp, root)) == -1)
+			ft_close_error(SYNTAX_ERROR, root);
 		ft_available_name_com(root, tmp, name_com);
 		if ((tmp[2] = ft_strchr(tmp[0], COM_CHAR)) == NULL)
 			tmp[name_com] = ft_check_continue(root, fd, tmp[0], name_com);
@@ -96,11 +97,11 @@ void			ft_check_name(int fd, t_root *root)
 		{
 			tmp[name_com] = ft_cpy_name(root, name_com, tmp[0], tmp[2]++);
 			if (ft_check_com_char(tmp + 2, tmp + 1) == 1)
-				ft_close_error(455);
+				ft_close_error(SYNTAX_ERROR, root);
 		}
 		ft_strdel(tmp + 1);
 		if (tmp[4] && tmp[5])
 			return ;
 	}
-	ft_close_error(784);
+	ft_close_error(DUPLICATE_ERR, root);
 }

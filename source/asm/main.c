@@ -12,31 +12,30 @@
 
 #include "../../includes/asm.h"
 #include "../../includes/asm_g_com.h"
+#include "../../includes/asm_error.h"
 
 int				main(int ac, char **av)
 {
 	t_root		*root;
-	char		*name;
-	int			fd[2];
 
 	if (ac == 1)
-		ft_close_error(0);
+		ft_close_error(OPEN_ERROR, NULL);
 	ft_init_root(&root);
-	name = ft_create_name(av[1]);
-	fd[0] = open(av[1], O_RDONLY);
-	if (fd[0] == -1)
-		ft_close_error(1);
-	ft_check_name(fd[0], root);
-	ft_check_command(fd[0], root);
+	root->name = ft_create_name(av[1], root);
+	root->fd[0] = open(av[1], O_RDONLY);
+	if (root->fd[0] == -1)
+		ft_close_error(OPEN_ERROR, root);
+	ft_check_name(root->fd[0], root);
+	ft_check_command(root->fd[0], root);
 	ft_no_such_label(root);
-	if ((fd[1] = open(name, O_WRONLY | O_CREAT | O_TRUNC, 0666)) == -1)
-		ft_close_error(2);
-	ft_write_cor(root, fd[1]);
+	if ((root->fd[1] = open(root->name, O_WRONLY | O_CREAT | O_TRUNC, 0666))
+		== -1)
+		ft_close_error(CREATE_F_ERROR, NULL);
+	ft_write_cor(root, root->fd[1]);
 	ft_putstr("Writing output program to ");
-	ft_putendl(name);
-	close(fd[0]);
-	close(fd[1]);
-	free(name);
-	exit(EXIT_SUCCESS);
+	ft_putendl(root->name);
+	close(root->fd[0]);
+	close(root->fd[1]);
+	ft_del_root(&root);
 	return (0);
 }

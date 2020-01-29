@@ -67,10 +67,12 @@ typedef struct			s_root
 	t_dlist				*label;
 	char				*lbl_char;
 	size_t				line;
+	int					fd[2];
+	char				*name;
 }						t_root;
 
-void					ft_close_error();
-char					*ft_create_name(char *av);
+void					ft_close_error(char *str, t_root *root);
+char					*ft_create_name(char *av, t_root *root);
 void					ft_init_root(t_root **root);
 void					ft_check_name(int fd, t_root *root);
 t_dlist					*ft_add_next(t_dlist *node, t_dlist *tmp);
@@ -80,7 +82,7 @@ int						ft_check_label(char **str, t_root *root);
 t_label					*ft_find_label(char *str, t_dlist *label);
 void					ft_no_such_label(t_root *root);
 void					ft_write_cor(t_root *root, int	fd);
-unsigned int			ft_atoi_umax(char **str);
+unsigned int			ft_atoi_umax(char **str, t_root *root);
 void					ft_add_command(char *str, t_root *root);
 void					ft_check_reg(char **str, t_root *root,
 						t_op *com, int j);
@@ -91,5 +93,8 @@ void					ft_check_dir(char **str, t_root *root,
 char					*ft_check_continue(t_root *root, int fd,
 						char *tmp_in, int name_com);
 int						ft_check_com_char(char **str, char **del);
+void					ft_del_dlist_next(t_dlist *head);
+void					ft_del_root(t_root **root);
+void					ft_del_dlist_prev(t_dlist *head);
 
 #endif

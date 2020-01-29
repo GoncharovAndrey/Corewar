@@ -12,10 +12,19 @@
 
 #include "../../includes/asm.h"
 #include "../../includes/asm_g_com.h"
+#include "../../includes/asm_error.h"
 
-void			ft_close_error(int error)
+void			ft_close_error(char *str, t_root *root)
 {
-	printf("%d error\n", error);
-	ft_putendl_fd("ERROR", 2);
+	ft_putstr_fd(str, 2);
+	if (root && root->line)
+	{
+		ft_putnbr_fd(root->line, 2);
+		ft_putstr("]\n");
+	}
+	if (root && root->fd[0])
+		close(root->fd[0]);
+	if (root)
+		ft_del_root(&root);
 	exit(EXIT_FAILURE);
 }

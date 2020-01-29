@@ -12,6 +12,7 @@
 
 #include "../../includes/asm.h"
 #include "../../includes/asm_g_com.h"
+#include "../../includes/asm_error.h"
 
 int				ft_check_com_char(char **str, char **del)
 {
@@ -37,7 +38,7 @@ static size_t	ft_cat_name_n(t_root *root, int nm_cm, char *strt, size_t size)
 		if (len + 1 <= PROG_NAME_LENGTH)
 			ft_strncat(root->header->prog_name, strt, size);
 		else
-			ft_close_error(17);
+			ft_close_error(NAME_SIZE, NULL);
 	}
 	else if (nm_cm == 5)
 	{
@@ -46,7 +47,7 @@ static size_t	ft_cat_name_n(t_root *root, int nm_cm, char *strt, size_t size)
 		if (len + 1 <= COMMENT_LENGTH)
 			ft_strncat(root->header->comment, strt, size);
 		else
-			ft_close_error(17);
+			ft_close_error(COMMENT_SIZE, NULL);
 	}
 	return (len);
 }
@@ -83,7 +84,7 @@ char			*ft_check_continue(t_root *root, int fd, char *in, int name_com)
 		{
 			ft_cat_name_n(root, name_com, tmp_read, (tmp_end++) - tmp_read);
 			if (ft_check_com_char(&tmp_end, &tmp_read) == 1)
-				ft_close_error(455);
+				ft_close_error(SYNTAX_ERROR, root);
 			free(tmp_read);
 			return (root->header->prog_name);
 		}
