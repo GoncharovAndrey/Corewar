@@ -13,7 +13,6 @@
 #include "../../includes/asm.h"
 #include "../../includes/asm_g_com.h"
 
-
 static void		ft_available_name_com(t_root *root, char **tmp, int name_com)
 {
 	if (tmp)
@@ -62,25 +61,20 @@ static int		ft_valid_name(char **str)
 		res = 4;
 	else if (!ft_strcmp(tmp, COMMENT_CMD_STRING))
 		res = 5;
-	while (*str && **str && **str != COM_CHAR)
+	while (*str && **str && (**str == 32 || **str == '\t'))
 		(*str)++;
-	if (!*str || !**str)
+	if (!*str || !**str || **str != COM_CHAR)
 		ft_close_error(166);
 	(*str)++;
 	free(tmp);
 	return (res);
 }
 
-int				ft_check_com_char(char **str, char **del)
+static int		ft_fu_norm(t_root *root, char **str, char **del)
 {
-	while (*str && **str && (**str == 32 || **str == '\t'))
-		(*str)++;
-	if (!*str || !**str || **str == COMMENT_CHAR || **str == ALT_COMMENT_CHAR)
-	{
-		ft_strdel(del);
-		return (0);
-	}
-	return (1);
+	root->line++;
+	*del = *str;
+	return (ft_check_com_char(str, del));
 }
 
 void			ft_check_name(int fd, t_root *root)
@@ -91,9 +85,7 @@ void			ft_check_name(int fd, t_root *root)
 	ft_bzero(tmp, sizeof(char*) * 6);
 	while (get_next_line(fd, tmp) > 0)
 	{
-		root->line++;
-		tmp[1] = tmp[0];
-		if (!ft_check_com_char(tmp, tmp + 1))
+		if (!ft_fu_norm(root, tmp, tmp + 1))
 			continue ;
 		if ((name_com = ft_valid_name(tmp)) == -1)
 			ft_close_error(878);
@@ -108,6 +100,7 @@ void			ft_check_name(int fd, t_root *root)
 		}
 		ft_strdel(tmp + 1);
 		if (tmp[4] && tmp[5])
-			break ;
+			return ;
 	}
+	ft_close_error(784);
 }

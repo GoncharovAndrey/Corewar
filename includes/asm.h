@@ -70,6 +70,8 @@ typedef struct			s_root
 }						t_root;
 
 void					ft_close_error();
+char					*ft_create_name(char *av);
+void					ft_init_root(t_root **root);
 void					ft_check_name(int fd, t_root *root);
 t_dlist					*ft_add_next(t_dlist *node, t_dlist *tmp);
 t_dlist					*ft_creat_node(size_t size);

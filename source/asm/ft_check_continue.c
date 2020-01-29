@@ -13,7 +13,19 @@
 #include "../../includes/asm.h"
 #include "../../includes/asm_g_com.h"
 
-size_t			ft_cat_name_n(t_root *root, int nm_cm, char *strt, size_t size)
+int				ft_check_com_char(char **str, char **del)
+{
+	while (*str && **str && (**str == 32 || **str == '\t'))
+		(*str)++;
+	if (!*str || !**str || **str == COMMENT_CHAR || **str == ALT_COMMENT_CHAR)
+	{
+		ft_strdel(del);
+		return (0);
+	}
+	return (1);
+}
+
+static size_t	ft_cat_name_n(t_root *root, int nm_cm, char *strt, size_t size)
 {
 	size_t		len;
 
@@ -39,7 +51,7 @@ size_t			ft_cat_name_n(t_root *root, int nm_cm, char *strt, size_t size)
 	return (len);
 }
 
-void			ft_for_cat(t_root *root, int name_com, char *str)
+static void		ft_for_cat(t_root *root, int name_com, char *str)
 {
 	size_t		size;
 
@@ -73,8 +85,8 @@ char			*ft_check_continue(t_root *root, int fd, char *in, int name_com)
 			if (ft_check_com_char(&tmp_end, &tmp_read) == 1)
 				ft_close_error(455);
 			free(tmp_read);
-			break ;
+			return (root->header->prog_name);
 		}
 	}
-	return (root->header->prog_name);
+	return (NULL);
 }

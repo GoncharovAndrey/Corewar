@@ -45,5 +45,7 @@ unsigned int			ft_atoi_umax(char **str)
 		res = res * 10 + (**str - '0');
 		(*str)++;
 	}
+	if (tmp > res)
+		return (ft_res_sign(z));
 	return (res * z);
 }
