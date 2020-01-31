@@ -1,4 +1,9 @@
-.name "live"
-.comment "live: dir value is too big"
+.name       "Batman"
+.comment    "This city needs me"
 
-live %94837589436749859842
+loop:
+        sti r1, %:live, %1
+live:
+        live %0
+        ld %0, r2
+        zjmp %:loop

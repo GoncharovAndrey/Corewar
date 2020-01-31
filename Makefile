@@ -8,7 +8,7 @@ OBJ_DIR =	./obj/
 
 SRC_DIR =	./source/asm/
 
-C_FILE =	main.c \
+C_FILE =	main_asm.c \
 			ft_check_file.c \
 			ft_dlist.c \
 			ft_check_command.c \
